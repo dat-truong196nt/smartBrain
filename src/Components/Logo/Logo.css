@@ -1,0 +1,8 @@
+.ba-gradient {
+	border-radius: 20px;
+	background: linear-gradient(to right, #23049D, #AA2EE6);
+}
+
+.tilt {
+	width: 150px
+}

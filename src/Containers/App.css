@@ -1,0 +1,8 @@
+.App {
+  text-align: center;
+}
+
+.particles {
+  position: fixed;
+  z-index: -1;
+}
