@@ -5,6 +5,8 @@ import Logo from '../Components/Logo/Logo'
 import ImageLinkForm from '../Components/ImageLinkForm/ImageLinkForm'
 import Ranking from '../Components/Ranking/Ranking'
 import FaceDetection from '../Components/FaceDetection/FaceDetection'
+import SignIn from '../Components/SignIn/SignIn'
+import Register from '../Components/Register/Register'
 import Particles from 'react-tsparticles'
 import Clarifai from 'clarifai'
 
@@ -19,6 +21,7 @@ class App extends Component {
       input: '',
       url: '',
       boxs: [],
+      route: 'signin',
     }
   }
 
@@ -56,15 +59,35 @@ class App extends Component {
     .catch(err => console.log);
   }
 
+  onRouteChange = (route) => {
+    this.setState({route});
+  }
+
+  routeRendering (route) {
+    switch (route) {
+      case 'signin':
+        return <SignIn onRouteChange={this.onRouteChange}/>
+      case 'register':
+        return <Register onRouteChange={this.onRouteChange}/>
+      case 'home':
+      default:
+        return (
+          <>
+            <Logo/>
+            <Ranking/>
+            <ImageLinkForm updateUrl={this.updateUrl} submitBtn={this.onBtnSubmit}/>
+            <FaceDetection boxs= {this.state.boxs} imageUrl={this.state.url}/>
+          </>
+        )
+    }
+  }
+
   render() {
     return (
       <>
         <Particles className='particles'/>
-        <Navigation/>
-        <Logo/>
-        <Ranking/>
-        <ImageLinkForm updateUrl={this.updateUrl} submitBtn={this.onBtnSubmit}/>
-        <FaceDetection boxs= {this.state.boxs} imageUrl={this.state.url}/>
+        <Navigation route={this.state.route} onRouteChange={this.onRouteChange}/>
+        {this.routeRendering(this.state.route)}
       </>
     );
   }

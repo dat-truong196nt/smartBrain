@@ -1,10 +1,16 @@
 import React from "react";
 import 'tachyons'
 
-const Navigation = () => {
+const Navigation = ({onRouteChange, route}) => {
 	return (
 		<nav style={{display: 'flex', justifyContent:'flex-end'}}>
-			<p className="f3 underline dim black pa3 pointer">Sign out</p>
+			{route === 'signin'
+			? <>
+				<p onClick={() => onRouteChange('register')} className="f3 underline dim black pa3 pointer">Register</p>
+				<p onClick={() => onRouteChange('signin')} className="f3 underline dim black pa3 pointer">Sign out</p>
+			</>
+			: <p onClick={() => onRouteChange('signin')} className="f3 underline dim black pa3 pointer">Sign in</p>
+			}
 		</nav>
 	);
 }
