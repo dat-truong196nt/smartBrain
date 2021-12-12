@@ -18,7 +18,6 @@ class SignIn extends Component {
 	}
 
 	onLogin = () => {
-		console.log(JSON.stringify({email: this.state.email, password: this.state.password}));
 		fetch('http://localhost:3000/signin', {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
