@@ -12,7 +12,7 @@ import Clarifai from 'clarifai'
 
 const app = new Clarifai.App({
   apiKey: 'aaf71315bf854f6895f2a76c9a71a794'
- });
+});
 
 class App extends Component {
   constructor() {
