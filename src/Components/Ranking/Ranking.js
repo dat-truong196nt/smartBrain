@@ -1,9 +1,9 @@
 import React from "react";
 import 'tachyons'
 
-const Ranking = () => {
+const Ranking = ({username, entries}) => {
 	return (
-		<p className="f1 light-yellow" style={{display: 'flex', justifyContent: 'center'}}>{`Your current ranking is #0`}</p>
+		<p className="f1 light-yellow" style={{display: 'flex', justifyContent: 'center'}}>{`${username}, your currently enpoint is ${entries}`}</p>
 	);
 }
 
