@@ -24,6 +24,10 @@ class Register extends Component {
 
 	onRegister = () => {
 		const {email, password, name} = this.state;
+
+		if (!password || !name || !email)
+			return console.error('Wrong input format');
+
 		fetch('http://localhost:3000/register', {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
