@@ -30,7 +30,23 @@ class Register extends Component {
 			body: JSON.stringify({email, password, name}),
 		})
 		.then(resp => resp.json())
-		.then(this.props.onRouteChange('signin'))
+		.then((user) => {
+			if (user.loginId && user.userId) {
+				fetch('http://localhost:3000/signin', {
+					method: 'post',
+					headers: {'Content-Type': 'application/json'},
+					body: JSON.stringify({email, password}),
+				})
+				.then(resp => resp.json())
+				.then(user => {
+					if (user.id) {
+						this.props.loadUser(user);
+						this.props.onRouteChange('home');
+					}
+				})
+				.catch(console.log);
+			}
+		})
 		.catch(console.log)
 	}
 
