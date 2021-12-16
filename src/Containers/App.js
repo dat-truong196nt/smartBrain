@@ -22,7 +22,24 @@ class App extends Component {
       url: '',
       boxs: [],
       route: 'signin',
+      user: {
+        id: 0,
+        name: '',
+        email: '',
+        entries: 0,
+        joined: '',
+      }
     }
+  }
+
+  loadUser = (data) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined,
+    }});
   }
 
   calculateFacePosition = (data) => {
@@ -55,8 +72,21 @@ class App extends Component {
       Clarifai.FACE_DETECT_MODEL,
       this.state.input,
     )
-    .then(response => this.displayBox(this.calculateFacePosition(response)))
-    .catch(err => console.log);
+    .then(response => {
+      fetch('http://localhost:3000/image', {
+        method: 'put',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id: this.state.user.id}),
+      })
+      .catch(console.log);
+      this.displayBox(this.calculateFacePosition(response));
+      this.setState(Object.assign(this.state.user, {entries: this.state.user.entries + 1}))
+    })
+    .catch(console.log);
+  }
+
+  onSignOut = () => {
+    this.setState({user: {}});
   }
 
   onRouteChange = (route) => {
@@ -66,15 +96,15 @@ class App extends Component {
   routeRendering (route) {
     switch (route) {
       case 'signin':
-        return <SignIn onRouteChange={this.onRouteChange}/>
+        return <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
       case 'register':
-        return <Register onRouteChange={this.onRouteChange}/>
+        return <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
       case 'home':
       default:
         return (
           <>
             <Logo/>
-            <Ranking/>
+            <Ranking username={this.state.user.name} entries={this.state.user.entries}/>
             <ImageLinkForm updateUrl={this.updateUrl} submitBtn={this.onBtnSubmit}/>
             <FaceDetection boxs= {this.state.boxs} imageUrl={this.state.url}/>
           </>
@@ -86,7 +116,7 @@ class App extends Component {
     return (
       <>
         <Particles className='particles'/>
-        <Navigation route={this.state.route} onRouteChange={this.onRouteChange}/>
+        <Navigation route={this.state.route} onRouteChange={this.onRouteChange} onSignOut={this.onSignOut}/>
         {this.routeRendering(this.state.route)}
       </>
     );
