@@ -8,11 +8,6 @@ import FaceDetection from '../Components/FaceDetection/FaceDetection'
 import SignIn from '../Components/SignIn/SignIn'
 import Register from '../Components/Register/Register'
 import Particles from 'react-tsparticles'
-import Clarifai from 'clarifai'
-
-const app = new Clarifai.App({
-  apiKey: 'aaf71315bf854f6895f2a76c9a71a794'
-});
 
 class App extends Component {
   constructor() {
@@ -67,20 +62,23 @@ class App extends Component {
   }
 
   onBtnSubmit = () => {
-    this.setState({url: this.state.input});
-    app.models.predict(
-      Clarifai.FACE_DETECT_MODEL,
-      this.state.input,
-    )
+    let {user, input} = this.state;
+
+    this.setState({url: input});
+    fetch('http://localhost:3000/imageUrl', {
+        method: 'put',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({url: input}),
+    })
     .then(response => {
       fetch('http://localhost:3000/image', {
         method: 'put',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id: this.state.user.id}),
+        body: JSON.stringify({id: user.id}),
       })
       .catch(console.log);
       this.displayBox(this.calculateFacePosition(response));
-      this.setState(Object.assign(this.state.user, {entries: this.state.user.entries + 1}))
+      this.setState(Object.assign(user, {entries: user.entries + 1}))
     })
     .catch(console.log);
   }
