@@ -65,13 +65,13 @@ class App extends Component {
     let {user, input} = this.state;
 
     this.setState({url: input});
-    fetch('http://localhost:3000/imageUrl', {
+    fetch('https://dattruong196nt-smartbrain-be.herokuapp.com/imageUrl', {
         method: 'put',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({url: input}),
     })
     .then(response => {
-      fetch('http://localhost:3000/image', {
+      fetch('https://dattruong196nt-smartbrain-be.herokuapp.com/image', {
         method: 'put',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({id: user.id}),

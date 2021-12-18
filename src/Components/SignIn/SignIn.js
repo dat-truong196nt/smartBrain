@@ -22,7 +22,7 @@ class SignIn extends Component {
 		if (!password || !email)
 			return console.error('Wrong input format');
 
-		fetch('http://localhost:3000/signin', {
+		fetch('https://dattruong196nt-smartbrain-be.herokuapp.com/signin', {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({email, password}),

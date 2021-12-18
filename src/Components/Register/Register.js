@@ -28,7 +28,7 @@ class Register extends Component {
 		if (!password || !name || !email)
 			return console.error('Wrong input format');
 
-		fetch('http://localhost:3000/register', {
+		fetch('https://dattruong196nt-smartbrain-be.herokuapp.com/register', {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({email, password, name}),
