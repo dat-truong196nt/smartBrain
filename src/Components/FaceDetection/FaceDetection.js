@@ -1,5 +1,5 @@
 import React from "react";
-import './FaceDetection.scss'
+import './FaceDetection.css'
 import "tachyons";
 
 const createBoundingBoxs = (childboxs) => childboxs.reduce(

@@ -1,6 +1,6 @@
 import React from "react";
 import 'tachyons'
-import './ImageLinkForm.scss'
+import './ImageLinkForm.css'
 
 const ImageLinkForm = ({updateUrl, submitBtn}) => {
 	return (
