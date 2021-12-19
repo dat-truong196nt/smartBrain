@@ -4,7 +4,7 @@ import "tachyons";
 
 const createBoundingBoxs = (childboxs) => childboxs.reduce(
 	(acc, box) => {
-		acc.push(<div className='bounding-box' style={{top: box.top, bottom: box.bottom, left: box.left, right: box.right}}></div>);
+		acc.push(<div key={box.top.toString()} className='bounding-box' style={{top: box.top, bottom: box.bottom, left: box.left, right: box.right}}></div>);
 		return acc;
 	}, []
 );
