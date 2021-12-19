@@ -21,7 +21,7 @@ const App = () => {
       id: data.id,
       name: data.name,
       email: data.email,
-      entries: data.entries,
+      entries: Number(data.entries),
       joined: data.joined,
     });
   }
@@ -61,17 +61,17 @@ const App = () => {
         body: JSON.stringify({id: user.id}),
       })
       .catch(console.log);
-      console.log({data});
-      const boxArr = data.rawData.outputs[0].data.regions;
-      console.log({boxArr});
+      setUser(Object.assign(user, {entries: user.entries + 1}))
       displayBox(calculateFacePosition(data));
-      // setUser(...Object.assign(user, {entries: user.entries + 1}))
     })
     .catch(console.log);
   }
 
   const onSignOut = () => {
     setUser({});
+    setInput('');
+    setUrl('');
+    setBoxs([]);
   }
 
   const onRouteChange = (route) => {
