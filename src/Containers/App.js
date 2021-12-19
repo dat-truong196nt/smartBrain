@@ -1,5 +1,5 @@
 import './App.css';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Navigation from '../Components/Navigation/Navigation'
 import Logo from '../Components/Logo/Logo'
 import ImageLinkForm from '../Components/ImageLinkForm/ImageLinkForm'
@@ -9,35 +9,24 @@ import SignIn from '../Components/SignIn/SignIn'
 import Register from '../Components/Register/Register'
 import Particles from 'react-tsparticles'
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      input: '',
-      url: '',
-      boxs: [],
-      route: 'signin',
-      user: {
-        id: 0,
-        name: '',
-        email: '',
-        entries: 0,
-        joined: '',
-      }
-    }
-  }
+const App = () => {
+  const [input, setInput] = useState('');
+  const [url, setUrl] = useState('');
+  const [boxs, setBoxs] = useState([]);
+  const [route, setRoute] = useState('signin');
+  const [user, setUser] = useState({id: 0, name: '', email: '', entries: 0, joined: ''});
 
-  loadUser = (data) => {
-    this.setState({user: {
+  const loadUser = (data) => {
+    setUser({
       id: data.id,
       name: data.name,
       email: data.email,
       entries: data.entries,
       joined: data.joined,
-    }});
+    });
   }
 
-  calculateFacePosition = (data) => {
+  const calculateFacePosition = (data) => {
     const boxArr = data.rawData.outputs[0].data.regions;
     const image = document.getElementById('imgToDetect');
 
@@ -53,72 +42,68 @@ class App extends Component {
     )
   }
 
-  displayBox (boxs) {
-    this.setState({boxs});
+  const displayBox = (boxs) => {
+    setBoxs(boxs);
   }
 
-  updateUrl = (event) => {
-    this.setState({input: event.target.value});
-  }
-
-  onBtnSubmit = () => {
-    let {user, input} = this.state;
-
-    this.setState({url: input});
+  const onBtnSubmit = () => {
+    setUrl(input);
     fetch('https://dattruong196nt-smartbrain-be.herokuapp.com/imageUrl', {
         method: 'put',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({url: input}),
     })
-    .then(response => {
+    .then(resp => resp.json())
+    .then(data => {
       fetch('https://dattruong196nt-smartbrain-be.herokuapp.com/image', {
         method: 'put',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({id: user.id}),
       })
       .catch(console.log);
-      this.displayBox(this.calculateFacePosition(response));
-      this.setState(Object.assign(user, {entries: user.entries + 1}))
+      console.log({data});
+      const boxArr = data.rawData.outputs[0].data.regions;
+      console.log({boxArr});
+      displayBox(calculateFacePosition(data));
+      // setUser(...Object.assign(user, {entries: user.entries + 1}))
     })
     .catch(console.log);
   }
 
-  onSignOut = () => {
-    this.setState({user: {}});
+  const onSignOut = () => {
+    setUser({});
   }
 
-  onRouteChange = (route) => {
-    this.setState({route});
+  const onRouteChange = (route) => {
+    setRoute(route);
   }
 
-  routeRendering (route) {
+  const routeRendering = (route) => {
     switch (route) {
       case 'signin':
-        return <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
+        return <SignIn onRouteChange={onRouteChange} loadUser={loadUser}/>
       case 'register':
-        return <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
+        return <Register onRouteChange={onRouteChange} loadUser={loadUser}/>
       case 'home':
       default:
         return (
           <>
             <Logo/>
-            <Ranking username={this.state.user.name} entries={this.state.user.entries}/>
-            <ImageLinkForm updateUrl={this.updateUrl} submitBtn={this.onBtnSubmit}/>
-            <FaceDetection boxs= {this.state.boxs} imageUrl={this.state.url}/>
+            <Ranking username={user.name} entries={user.entries}/>
+            <ImageLinkForm updateUrl={(event) => setInput(event.target.value)} submitBtn={onBtnSubmit}/>
+            <FaceDetection boxs={boxs} imageUrl={url}/>
           </>
         )
     }
   }
 
-  render() {
-    return (
-      <>
-        <Particles className='particles'/>
-        <Navigation route={this.state.route} onRouteChange={this.onRouteChange} onSignOut={this.onSignOut}/>
-        {this.routeRendering(this.state.route)}
-      </>
-    );
-  }
+  return (
+    <>
+      <Particles className='particles'/>
+      <Navigation route={route} onRouteChange={onRouteChange} onSignOut={onSignOut}/>
+      {routeRendering(route)}
+    </>
+  );
 }
 
 export default App;
